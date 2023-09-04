@@ -6,7 +6,6 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
-
         <Route
           element={<Home />}
           path="/"

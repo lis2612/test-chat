@@ -1,9 +1,5 @@
 import axios from "axios";
 
-// const ax = axios.create({
-//   baseUrl: "http://localhost:8008",
-// });
-
 export const AuthService = {
   async login(authData) {
     try {

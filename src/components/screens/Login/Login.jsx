@@ -1,8 +1,22 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./Login.module.css";
 import { AuthService } from "../../../services/auth.service";
+import { AuthContext } from "../../../providers/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const { isAuth, setIsAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = "Login";
+    console.log("isAuth login", isAuth);
+  }, [isAuth]);
+
+  useEffect(() => {
+    if (isAuth) navigate("/");
+  }, [navigate, isAuth]);
+
   const [authData, setAuthData] = useState({
     // TODO delete this before production
     login: "user1",
@@ -18,6 +32,7 @@ function Login() {
 
     AuthService.login(encryptedAuthData);
 
+    setIsAuth(true);
     setAuthData({
       login: "",
       password: "",
