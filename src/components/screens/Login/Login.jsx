@@ -5,13 +5,12 @@ import { AuthContext } from "../../../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const { isAuth, setIsAuth } = useContext(AuthContext);
+  const { isAuth, setIsAuth, userName, setUserName } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Login";
-    console.log("isAuth login", isAuth);
-  }, [isAuth]);
+    document.title = userName ? userName : "Login";
+  }, [userName]);
 
   useEffect(() => {
     if (isAuth) navigate("/");
@@ -23,15 +22,15 @@ function Login() {
     password: "password1",
   });
 
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault();
     const encryptedAuthData = {
       login: btoa(authData.login),
       password: btoa(authData.password),
     };
 
-    AuthService.login(encryptedAuthData);
-
+    const uName = await AuthService.login(encryptedAuthData);
+    setUserName(uName);
     setIsAuth(true);
     setAuthData({
       login: "",

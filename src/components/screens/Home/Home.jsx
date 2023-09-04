@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
-  const { isAuth } = useContext(AuthContext);
+  const { isAuth, userName } = useContext(AuthContext);
   useEffect(() => {
-    document.title = "Login";
-    console.log("isAuth login", isAuth);
-    if (!isAuth) navigate("/login")
+    document.title = userName?userName:"Home";
+  }, [userName]);
+
+  useEffect(() => {
+    if (!isAuth) navigate("/login");
   }, [navigate, isAuth]);
 
   return (
