@@ -14,6 +14,7 @@ export const AuthService = {
       console.log(error);
     }
   },
+
   isValidToken() {
     let exp;
     const JWT = localStorage.getItem("JWT");
@@ -25,11 +26,13 @@ export const AuthService = {
       return false;
     }
   },
+
   getUserName() {
     const JWT = localStorage.getItem("JWT");
     const userName = jwtDecode(JWT).name;
     return userName;
   },
+
   getLogin() {
     const JWT = localStorage.getItem("JWT");
     const login = jwtDecode(JWT).sub;
