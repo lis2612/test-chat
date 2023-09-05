@@ -10,8 +10,6 @@ export const AuthService = {
     try {
       const { data } = await axios.post("http://localhost:8008/auth", encryptedAuthData);
       localStorage.setItem("JWT", data);
-      const userName = jwtDecode(data).name;
-      return userName;
     } catch (error) {
       console.log(error);
     }
@@ -19,9 +17,22 @@ export const AuthService = {
   isValidToken() {
     let exp;
     const JWT = localStorage.getItem("JWT");
-    if (JWT) exp = jwtDecode(JWT).exp*1000;
-    else return false;
-    if (exp > Date.now()) return true;
-    else return false;
+    if (JWT) {
+      exp = jwtDecode(JWT).exp * 1000;
+      if (exp > Date.now()) return true;
+    } else {
+      console.log("JWT not valid");
+      return false;
+    }
+  },
+  getUserName() {
+    const JWT = localStorage.getItem("JWT");
+    const userName = jwtDecode(JWT).name;
+    return userName;
+  },
+  getLogin() {
+    const JWT = localStorage.getItem("JWT");
+    const login = jwtDecode(JWT).sub;
+    return login;
   },
 };

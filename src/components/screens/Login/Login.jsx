@@ -13,7 +13,7 @@ function Login() {
   }, [userName]);
 
   useEffect(() => {
-    if (isAuth) navigate("/");
+    if (isAuth) navigate("/topics");
   }, [navigate, isAuth]);
 
   const [authData, setAuthData] = useState({
@@ -24,8 +24,8 @@ function Login() {
 
   const login = async (e) => {
     e.preventDefault();
-    const uName = await AuthService.login(authData);
-    setUserName(uName);
+    await AuthService.login(authData);
+    setUserName(AuthService.getUserName());
     setIsAuth(true);
     setAuthData({
       login: "",
@@ -34,7 +34,7 @@ function Login() {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="container">
       <form className={styles.form}>
         <input
           type="text"
