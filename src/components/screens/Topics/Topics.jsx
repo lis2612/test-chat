@@ -39,7 +39,7 @@ const Topics = () => {
 
   return (
     <div className={`container ${styles.topics}`}>
-      <h2 className="topics__title">Список тем</h2>
+      <h2>Список тем</h2>
       {topics.length ? (
         topics.map((topic) => (
           <Link
