@@ -3,6 +3,7 @@ import jwtDecode from "jwt-decode";
 
 export const AuthService = {
   async login(authData) {
+
     const encryptedAuthData = {
       login: btoa(authData.login),
       password: btoa(authData.password),
@@ -16,6 +17,7 @@ export const AuthService = {
   },
 
   isValidToken() {
+    console.log("isValidtoken");
     let exp;
     const JWT = localStorage.getItem("JWT");
     if (JWT) {
@@ -28,12 +30,14 @@ export const AuthService = {
   },
 
   getUserName() {
+    console.log("getUserName");
     const JWT = localStorage.getItem("JWT");
     const userName = jwtDecode(JWT).name;
     return userName;
   },
 
   getLogin() {
+    console.log("getLogin");
     const JWT = localStorage.getItem("JWT");
     const login = jwtDecode(JWT).sub;
     return login;

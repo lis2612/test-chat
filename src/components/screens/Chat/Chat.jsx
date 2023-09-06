@@ -1,44 +1,76 @@
-import { Link, useParams } from "react-router-dom";
-import styles from "./Chat.module.css";
-import { useRef, useState, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { AuthContext } from "../../../providers/AuthProvider";
 import { AuthService } from "../../../services/auth.service";
+import styles from "./Chat.module.css";
 
 function Chat() {
   const { id } = useParams();
+  const { isAuth,userName } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [connected, setConnected] = useState(false);
-  const [login, setLogin] = useState(AuthService.getLogin());
+  const [login, setLogin] = useState();
   const [title, setTitle] = useState(id);
   const socket = useRef();
-  const cookieHeader = "token=" + localStorage.JWT + "; path=localhost:8008/";
-  document.cookie = cookieHeader;
+
+  useEffect(() => {
+    if (!isAuth) {
+      navigate("/login");
+    } else {
+      setLogin(AuthService.getLogin());
+    }
+  }, [isAuth]);
+
+  useEffect(() => {
+    document.title = userName ? userName : "Topics";
+    if (!connected)
+      try {
+        connect();
+      } catch (error) {
+        console.log("Error while connecting", error);
+      }
+    return () => {
+      if (connected) {
+        socket.current.close();
+        socket.current.onclose = () => {
+          console.log("Connection closed");
+        };
+      }
+    };
+  }, [login]);
 
   const connect = () => {
+    const cookieHeader = "token=" + localStorage.JWT + "; path=localhost:8008/";
+    document.cookie = cookieHeader;
     socket.current = new WebSocket("ws://localhost:8008/chat");
 
     socket.current.onopen = () => {
+      console.log("Open connection");
       setConnected(true);
       const initMessage = {
         login: login,
         topics: +id,
       };
-      socket.current.send(JSON.stringify(initMessage));
+      try {
+        socket.current.send(JSON.stringify(initMessage));
+      } catch (error) {
+        console.log("Error sending init message:", error);
+      }
     };
 
     socket.current.onmessage = (e) => {
       const incomeMessage = JSON.parse(e.data);
       console.log("incomeMessage: ", incomeMessage);
       if (incomeMessage.result) {
-      setTitle(incomeMessage.topics);
+        setTitle(incomeMessage.topics);
 
         const sortedMessages = incomeMessage.result.sort((a, b) => a.id - b.id);
         setMessages(sortedMessages);
       } else {
         console.log("Add new message");
-
-
-        setMessages((prev)=>([...prev,incomeMessage]));
+        setMessages((prev) => [...prev, incomeMessage].sort((a, b) => a.id - b.id));
       }
     };
 
@@ -57,19 +89,10 @@ function Chat() {
     setNewMessage("");
   };
 
-  // useEffect(() => {
-  //   console.log("Messages", messages);
-  // }, [messages]);
-
   useEffect(() => {
-    connect();
-    return () => {
-      socket.current.close();
-      socket.current.onclose = (e) => {
-        console.log("Connection closed", e);
-      };
-    };
-  }, []);
+    const messagesBox = document.getElementById("messagesBox");
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }, [messages]);
 
   return (
     <div className="container">
@@ -77,7 +100,9 @@ function Chat() {
 
       <h2>{title}</h2>
       <div className={styles.chat}>
-        <div className={styles.messages}>
+        <div
+          className={styles.messages}
+          id="messagesBox">
           {messages.length ? (
             messages.map((message) => (
               <div

@@ -14,7 +14,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow: auto;
   scroll-behavior: smooth;
   background-color: #808080;
   width: 100%;
@@ -28,6 +28,8 @@
 .message:nth-child(odd){
   align-self: flex-end;
 }
+
+
 .message {
   width: fit-content;
   max-width: 60%;
