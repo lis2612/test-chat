@@ -3,10 +3,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../../providers/AuthProvider";
 import { AuthService } from "../../../services/auth.service";
 import styles from "./Chat.module.css";
+import Messages from "./Messages";
 
 function Chat() {
   const { id } = useParams();
-  const { isAuth,userName } = useContext(AuthContext);
+  const { isAuth, userName } = useContext(AuthContext);
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -16,6 +17,7 @@ function Chat() {
   const socket = useRef();
 
   useEffect(() => {
+    AuthService.getTokenData()
     if (!isAuth) {
       navigate("/login");
     } else {
@@ -34,6 +36,7 @@ function Chat() {
     return () => {
       if (connected) {
         socket.current.close();
+        setConnected(false);
         socket.current.onclose = () => {
           console.log("Connection closed");
         };
@@ -65,12 +68,10 @@ function Chat() {
       console.log("incomeMessage: ", incomeMessage);
       if (incomeMessage.result) {
         setTitle(incomeMessage.topics);
-
-        const sortedMessages = incomeMessage.result.sort((a, b) => a.id - b.id);
-        setMessages(sortedMessages);
+        setMessages(incomeMessage.result);
       } else {
         console.log("Add new message");
-        setMessages((prev) => [...prev, incomeMessage].sort((a, b) => a.id - b.id));
+        setMessages((prev) => [...prev, incomeMessage]);
       }
     };
 
@@ -89,35 +90,12 @@ function Chat() {
     setNewMessage("");
   };
 
-  useEffect(() => {
-    const messagesBox = document.getElementById("messagesBox");
-    messagesBox.scrollTop = messagesBox.scrollHeight;
-  }, [messages]);
-
   return (
     <div className="container">
       <Link to="/topics">Назад</Link>
-
       <h2>{title}</h2>
       <div className={styles.chat}>
-        <div
-          className={styles.messages}
-          id="messagesBox">
-          {messages.length ? (
-            messages.map((message) => (
-              <div
-                className={styles.message}
-                key={message.id}>
-                <h3>
-                  {message.login} {message.id}
-                </h3>
-                <p>{message.message}</p>
-              </div>
-            ))
-          ) : (
-            <p>There are no messages</p>
-          )}
-        </div>
+        <Messages messagesArr={messages} />
         <div className={styles.formMessage}>
           <input
             className={styles.inputMessage}
