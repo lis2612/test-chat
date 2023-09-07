@@ -22,7 +22,6 @@ const Topics = () => {
   useEffect(() => {
     if (isAuth) {
       ChatService.getTopics().then((data) => {
-        console.log(data);
         const topics = [];
         for (let key of Object.keys(data)) {
           topics.push({ id: key, title: data[key] });

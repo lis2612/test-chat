@@ -12,6 +12,7 @@ function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const [connected, setConnected] = useState(false);
   const [title, setTitle] = useState(id);
+  const [isModalShow, setIsModalShow] = useState(false);
   const socket = useRef();
 
   useEffect(() => {
@@ -19,6 +20,10 @@ function Chat() {
       navigate("/login");
     }
   }, [navigate, isAuth]);
+
+  useEffect(() => {
+    if (!messages.length && connected) setIsModalShow(true);
+  }, [messages]);
 
   useEffect(() => {
     document.title = tokenData.name ? tokenData.name : "Topics";
@@ -37,7 +42,7 @@ function Chat() {
         };
       }
     };
-  }, [tokenData,connected]);
+  }, [tokenData, connected]);
 
   const connect = () => {
     const cookieHeader = "token=" + localStorage.JWT + "; path=localhost:8008/";
@@ -60,10 +65,10 @@ function Chat() {
 
     socket.current.onmessage = (e) => {
       const incomeMessage = JSON.parse(e.data);
-      console.log("incomeMessage: ", incomeMessage);
       if (incomeMessage.result) {
         setTitle(incomeMessage.topics);
         setMessages(incomeMessage.result);
+        if(!incomeMessage.result.length) setIsModalShow(true)
       } else {
         setMessages((prev) => [...prev, incomeMessage]);
       }
@@ -105,6 +110,19 @@ function Chat() {
           </button>
         </div>
       </div>
+      {isModalShow && (
+        <div
+          className={styles.modal}
+          id="modal">
+          <p>В этом чате пока нет сообщений</p>
+          <button
+            onClick={() => {
+              setIsModalShow(false);
+            }}>
+            OK
+          </button>
+        </div>
+      )}
     </div>
   );
 }

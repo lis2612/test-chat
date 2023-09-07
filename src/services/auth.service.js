@@ -11,13 +11,6 @@ export const AuthService = {
       const response = await axios.post("http://localhost:8008/auth", encryptedAuthData);
       localStorage.setItem("JWT", response.data);
       return response;
-      // if (response.status != 200) {
-      //   console.log("Autorization error", response);
-      //   throw new Error("Authorization error: ", response.status);
-      // } else {
-      //   localStorage.setItem("JWT", response.data);
-      //   return response;
-      // }
     } catch (error) {
       console.log("Authorization error: ", error.code);
     }

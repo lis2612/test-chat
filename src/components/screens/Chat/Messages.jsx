@@ -18,9 +18,7 @@ const Messages = ({ messagesArr }) => {
           <div
             className={styles.message}
             key={message.id}>
-            <h3>
-              {message.login} {message.id}
-            </h3>
+            <h3>{message.login}</h3>
             <p>{message.message}</p>
           </div>
         ))
