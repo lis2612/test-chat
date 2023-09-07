@@ -31,12 +31,13 @@
 
 
 .message {
+  padding: 10px 20px;
   width: fit-content;
   max-width: 60%;
-  padding: 10px;
   margin-top: 15px;
   border: 1px solid black;
   border-radius: 15px;
+  background-color: rgba(50, 50, 0, 0.2);
 }
 
 .message h3,
