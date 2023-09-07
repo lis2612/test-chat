@@ -1,25 +1,23 @@
 import { useContext, useEffect } from "react";
-import styles from "./Home.module.css";
-import { AuthContext } from "../../../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import { AuthService } from "../../../services/auth.service";
+import { AuthContext } from "../../../providers/AuthProvider";
+import styles from "./Home.module.css";
 
 const Home = () => {
   const navigate = useNavigate();
-  const { isAuth, userName, setUserName } = useContext(AuthContext);
+  const { isAuth, tokenData } = useContext(AuthContext);
 
   useEffect(() => {
     if (!isAuth) {
       navigate("/login");
     } else {
-      setUserName(AuthService.getUserName());
       navigate("/topics");
     }
-  }, [navigate, isAuth,setUserName]);
+  }, [navigate, isAuth]);
 
   useEffect(() => {
-    document.title = userName ? userName : "Home";
-  }, [userName]);
+    document.title = tokenData.name ? tokenData.name : "Home";
+  }, [tokenData]);
 
   return (
     <div>

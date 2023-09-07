@@ -1,32 +1,27 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../../providers/AuthProvider";
-import { AuthService } from "../../../services/auth.service";
 import styles from "./Chat.module.css";
 import Messages from "./Messages";
 
 function Chat() {
-  const { id } = useParams();
-  const { isAuth, userName } = useContext(AuthContext);
+  const { isAuth, tokenData } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { id } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [connected, setConnected] = useState(false);
-  const [login, setLogin] = useState();
   const [title, setTitle] = useState(id);
   const socket = useRef();
 
   useEffect(() => {
-    AuthService.getTokenData()
     if (!isAuth) {
       navigate("/login");
-    } else {
-      setLogin(AuthService.getLogin());
     }
-  }, [isAuth]);
+  }, [navigate, isAuth]);
 
   useEffect(() => {
-    document.title = userName ? userName : "Topics";
+    document.title = tokenData.name ? tokenData.name : "Topics";
     if (!connected)
       try {
         connect();
@@ -42,7 +37,7 @@ function Chat() {
         };
       }
     };
-  }, [login]);
+  }, [tokenData,connected]);
 
   const connect = () => {
     const cookieHeader = "token=" + localStorage.JWT + "; path=localhost:8008/";
@@ -53,13 +48,13 @@ function Chat() {
       console.log("Open connection");
       setConnected(true);
       const initMessage = {
-        login: login,
+        login: tokenData.sub,
         topics: +id,
       };
       try {
         socket.current.send(JSON.stringify(initMessage));
       } catch (error) {
-        console.log("Error sending init message:", error);
+        console.log("Error sending init message");
       }
     };
 
@@ -70,7 +65,6 @@ function Chat() {
         setTitle(incomeMessage.topics);
         setMessages(incomeMessage.result);
       } else {
-        console.log("Add new message");
         setMessages((prev) => [...prev, incomeMessage]);
       }
     };
@@ -82,7 +76,7 @@ function Chat() {
 
   const sendMessage = async () => {
     const message = {
-      login: login,
+      login: tokenData.sub,
       topics: +id,
       message: newMessage,
     };

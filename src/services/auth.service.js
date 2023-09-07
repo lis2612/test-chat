@@ -3,43 +3,45 @@ import jwtDecode from "jwt-decode";
 
 export const AuthService = {
   async login(authData) {
-
     const encryptedAuthData = {
       login: btoa(authData.login),
       password: btoa(authData.password),
     };
     try {
-      const { data } = await axios.post("http://localhost:8008/auth", encryptedAuthData);
-      localStorage.setItem("JWT", data);
+      const response = await axios.post("http://localhost:8008/auth", encryptedAuthData);
+      localStorage.setItem("JWT", response.data);
+      return response;
+      // if (response.status != 200) {
+      //   console.log("Autorization error", response);
+      //   throw new Error("Authorization error: ", response.status);
+      // } else {
+      //   localStorage.setItem("JWT", response.data);
+      //   return response;
+      // }
     } catch (error) {
-      console.log(error);
+      console.log("Authorization error: ", error.code);
     }
   },
 
   isValidToken() {
-    console.log("isValidtoken");
-    let exp;
-    const JWT = localStorage.getItem("JWT");
-    if (JWT) {
-      exp = jwtDecode(JWT).exp * 1000;
-      if (exp > Date.now()) return true;
-    } else {
-      console.log("JWT not valid");
-      return false;
-    }
+    return this.getTokenData().exp * 1000 > Date.now();
   },
 
   getUserName() {
-    console.log("getUserName");
-    const JWT = localStorage.getItem("JWT");
-    const userName = jwtDecode(JWT).name;
-    return userName;
+    return this.getTokenData().name;
   },
 
   getLogin() {
-    console.log("getLogin");
-    const JWT = localStorage.getItem("JWT");
-    const login = jwtDecode(JWT).sub;
-    return login;
+    return this.getTokenData().sub;
+  },
+
+  getTokenData() {
+    try {
+      const JWT = localStorage.JWT;
+      if (JWT) return jwtDecode(JWT);
+      else return null;
+    } catch (error) {
+      console.log(error);
+    }
   },
 };

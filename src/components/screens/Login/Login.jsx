@@ -5,12 +5,12 @@ import { AuthService } from "../../../services/auth.service";
 import styles from "./Login.module.css";
 
 function Login() {
-  const { isAuth, setIsAuth, userName, setUserName } = useContext(AuthContext);
+  const { isAuth, setIsAuth, setTokenData } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = userName ? userName : "Login";
-  }, [userName]);
+    document.title = "Login";
+  }, []);
 
   useEffect(() => {
     if (isAuth) navigate("/topics");
@@ -18,19 +18,20 @@ function Login() {
 
   const [authData, setAuthData] = useState({
     // TODO delete this before production
-//     user1 password1
-// Michele password145
-// user15 passwordPass
-// cassandra passwordP
+    //     user1 password1
+    // Michele password145
+    // user15 passwordPass
+    // cassandra passwordP
     login: "Michele",
     password: "password145",
   });
 
-  const login = async (e) => {
+  const login = (e) => {
     e.preventDefault();
-    await AuthService.login(authData);
-    setUserName(AuthService.getUserName());
-    setIsAuth(true);
+    AuthService.login(authData).then(() => {
+      setTokenData(AuthService.getTokenData());
+      setIsAuth(true);
+    });
     setAuthData({
       login: "",
       password: "",

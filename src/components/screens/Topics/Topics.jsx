@@ -3,37 +3,32 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../providers/AuthProvider";
 import { ChatService } from "../../../services/chat.service";
 import styles from "./Topics.module.css";
-import { AuthService } from "../../../services/auth.service";
 
 const Topics = () => {
   const navigate = useNavigate();
-  const { isAuth, userName, setUserName } = useContext(AuthContext);
+  const { isAuth, tokenData } = useContext(AuthContext);
   const [topics, setTopics] = useState([]);
 
   useEffect(() => {
     if (!isAuth) {
       navigate("/login");
-    } else {
-      setUserName(AuthService.getUserName());
     }
-  }, [navigate, isAuth, setUserName]);
+  }, [navigate, isAuth]);
 
   useEffect(() => {
-    document.title = userName ? userName : "Topics";
-  }, [userName]);
+    document.title = tokenData.name ? tokenData.name : "Topics";
+  }, [tokenData]);
 
   useEffect(() => {
     if (isAuth) {
-      const getTopics = async () => {
-        const data = await ChatService.getTopics();
+      ChatService.getTopics().then((data) => {
+        console.log(data);
         const topics = [];
-        const keys = Object.keys(data);
-        for (let key of keys) {
+        for (let key of Object.keys(data)) {
           topics.push({ id: key, title: data[key] });
         }
         setTopics(topics);
-      };
-      getTopics();
+      });
     }
   }, [isAuth]);
 
