@@ -16,8 +16,8 @@
 
 **You need installed node.js and docker-compose software.**
 
-1. Unzip folder
-2. Open the folder with unzipped project in terminal
+1. Pull project
+2. Open the project folder in terminal
 3. Install node modules
    `npm install`
 4. Run container
