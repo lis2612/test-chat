@@ -16,9 +16,21 @@ function Chat() {
   const socket = useRef();
 
   useEffect(() => {
-    if (!isAuth) {
-      navigate("/login");
-    }
+    let time = 0;
+    document.addEventListener("mousemove", () => time=0);
+    const timerID = setInterval(() => {
+      time++;
+      console.log('time: ', time);
+      if(time>180) navigate("/topics")
+    }, 1000);
+
+    return () => {
+      clearInterval(timerID);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isAuth) navigate("/login");
   }, [navigate, isAuth]);
 
   useEffect(() => {
@@ -68,7 +80,7 @@ function Chat() {
       if (incomeMessage.result) {
         setTitle(incomeMessage.topics);
         setMessages(incomeMessage.result);
-        if(!incomeMessage.result.length) setIsModalShow(true)
+        if (!incomeMessage.result.length) setIsModalShow(true);
       } else {
         setMessages((prev) => [...prev, incomeMessage]);
       }
@@ -79,7 +91,7 @@ function Chat() {
     };
   };
 
-  const sendMessage = async () => {
+  const sendMessage = () => {
     const message = {
       login: tokenData.sub,
       topics: +id,

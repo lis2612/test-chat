@@ -5,7 +5,6 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
-  const [userName, setUserName] = useState();
   const [tokenData, setTokenData] = useState(AuthService.getTokenData());
 
   useEffect(() => {
@@ -17,7 +16,7 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  return <AuthContext.Provider value={{ isAuth, setIsAuth, userName, setUserName,tokenData, setTokenData }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ isAuth, setIsAuth, tokenData, setTokenData }}>{children}</AuthContext.Provider>;
 };
 
 AuthProvider.propTypes = {
