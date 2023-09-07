@@ -16,8 +16,8 @@ const Home = () => {
   }, [navigate, isAuth]);
 
   useEffect(() => {
-    document.title = tokenData.name ? tokenData.name : "Home";
-  }, [tokenData]);
+    document.title = isAuth ? tokenData.name : "Home";
+  }, [tokenData, isAuth]);
 
   return (
     <div>

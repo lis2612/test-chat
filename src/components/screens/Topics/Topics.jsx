@@ -16,8 +16,8 @@ const Topics = () => {
   }, [navigate, isAuth]);
 
   useEffect(() => {
-    document.title = tokenData.name ? tokenData.name : "Topics";
-  }, [tokenData]);
+    document.title = isAuth ? tokenData.name : "Topics";
+  }, [tokenData, isAuth]);
 
   useEffect(() => {
     if (isAuth) {

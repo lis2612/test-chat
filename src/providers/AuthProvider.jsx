@@ -1,6 +1,6 @@
+import PropTypes from "prop-types";
 import { createContext, useEffect, useState } from "react";
 import { AuthService } from "../services/auth.service";
-import PropTypes from "prop-types";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -8,7 +8,7 @@ const AuthProvider = ({ children }) => {
   const [tokenData, setTokenData] = useState(AuthService.getTokenData());
 
   useEffect(() => {
-    const tokenData=AuthService.getTokenData()
+    const tokenData = AuthService.getTokenData();
     if (!tokenData) {
       setIsAuth(false);
     } else {

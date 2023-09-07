@@ -22,7 +22,6 @@ function Chat() {
       time++;
       if (time > 180) navigate("/topics");
     }, 1000);
-
     return () => {
       clearInterval(timerID);
     };
@@ -37,7 +36,7 @@ function Chat() {
   }, [messages]);
 
   useEffect(() => {
-    document.title = tokenData.name ? tokenData.name : "Topics";
+    document.title = isAuth ? tokenData.name : "Topics";
     if (!connected)
       try {
         connect();
@@ -53,7 +52,7 @@ function Chat() {
         };
       }
     };
-  }, [tokenData, connected]);
+  }, [tokenData, connected, isAuth]);
 
   const connect = () => {
     const cookieHeader = "token=" + localStorage.JWT + "; path=localhost:8008/";
