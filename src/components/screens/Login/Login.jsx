@@ -17,13 +17,8 @@ function Login() {
   }, [navigate, isAuth]);
 
   const [authData, setAuthData] = useState({
-    // TODO delete this before production
-    //     user1 password1
-    // Michele password145
-    // user15 passwordPass
-    // cassandra passwordP
-    login: "Michele",
-    password: "password145",
+    login: "",
+    password: "",
   });
 
   const login = (e) => {

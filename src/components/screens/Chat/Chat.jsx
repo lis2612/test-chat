@@ -17,11 +17,10 @@ function Chat() {
 
   useEffect(() => {
     let time = 0;
-    document.addEventListener("mousemove", () => time=0);
+    document.addEventListener("mousemove", () => (time = 0));
     const timerID = setInterval(() => {
       time++;
-      console.log('time: ', time);
-      if(time>180) navigate("/topics")
+      if (time > 180) navigate("/topics");
     }, 1000);
 
     return () => {
