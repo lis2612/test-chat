@@ -23,7 +23,7 @@ const Messages = ({ messagesArr }) => {
           </div>
         ))
       ) : (
-        <p>There are no messages</p>
+        <p>Сообщений нет</p>
       )}
     </div>
   );

@@ -9,7 +9,7 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = "Login";
+    document.title = "Вход";
   }, []);
 
   useEffect(() => {
@@ -38,19 +38,19 @@ function Login() {
       <form className={styles.form}>
         <input
           type="text"
-          placeholder="login"
+          placeholder="имя пользователя"
           onChange={(e) => setAuthData((prev) => ({ ...prev, login: e.target.value }))}
           value={authData.login}
         />
         <input
           type="password"
-          placeholder="password"
+          placeholder="пароль"
           onChange={(e) => setAuthData((prev) => ({ ...prev, password: e.target.value }))}
           value={authData.password}
           name=""
           id=""
         />
-        <button onClick={(e) => login(e)}>Login</button>
+        <button onClick={(e) => login(e)}>Войти</button>
       </form>
     </div>
   );
