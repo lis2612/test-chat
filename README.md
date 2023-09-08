@@ -19,11 +19,17 @@
 1. Pull project
 2. Open the project folder in terminal
 3. Install node modules
-   `npm install`
+   ```shell
+    npm install
+   ```
 4. Run container
-   `docker-compose up -d`
+   ```shell
+   docker-compose up -d
+   ```
 5. Start dev server
-   `npm run dev`
+   ```shell
+   npm run dev
+   ```
 6. Go to http://localhost:5173
 
 Test account is:
