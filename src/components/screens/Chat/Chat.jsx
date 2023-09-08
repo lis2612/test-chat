@@ -41,7 +41,7 @@ function Chat() {
       try {
         connect();
       } catch (error) {
-        console.log("Error while connecting", error);
+        console.warn("Error while connecting", error.message);
       }
     return () => {
       if (connected) {
@@ -55,7 +55,7 @@ function Chat() {
   }, [tokenData, connected, isAuth]);
 
   const connect = () => {
-    const cookieHeader = "token=" + localStorage.JWT + "; path=localhost:8008/";
+    const cookieHeader = "token=" + localStorage.getItem("JWT") + "; path=localhost:8008/";
     document.cookie = cookieHeader;
     socket.current = new WebSocket("ws://localhost:8008/chat");
 
@@ -69,7 +69,7 @@ function Chat() {
       try {
         socket.current.send(JSON.stringify(initMessage));
       } catch (error) {
-        console.log("Error sending init message");
+        console.warn("Error sending init message.", error.message);
       }
     };
 
@@ -85,7 +85,7 @@ function Chat() {
     };
 
     socket.current.onerror = (e) => {
-      console.log("Connection error", e);
+      console.warn("Connection error", e);
     };
   };
 

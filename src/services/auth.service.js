@@ -12,7 +12,7 @@ export const AuthService = {
       localStorage.setItem("JWT", response.data);
       return response;
     } catch (error) {
-      console.log("Authorization error: ", error.code);
+      console.warn("Authorization error: ", error.code);
     }
   },
 
@@ -34,7 +34,7 @@ export const AuthService = {
       if (JWT) return jwtDecode(JWT);
       else return null;
     } catch (error) {
-      console.log(error);
+      console.warn(error.message);
     }
   },
 };

@@ -9,7 +9,7 @@ export const ChatService = {
       const { data } = await axios.get(`http://localhost:8008/topics?token=${token}&login=${login}`);
       return data.result.topics;
     } catch (error) {
-      console.log(error);
+      console.warn(error.message);
     }
   },
 };
